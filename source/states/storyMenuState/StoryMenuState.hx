@@ -15,7 +15,7 @@ import substates.ResetScoreSubState;
 import games.backend.WeekData;
 import games.backend.Highscore;
 import games.backend.Song;
-import general.shaders.CustomShaders;
+import general.shaders.CustomShaders.GlitchEffect;
 
 import states.mainMenuState.MainMenuState;
 import states.freeplayState.FreeplayState;
@@ -32,7 +32,7 @@ class StoryMenuState extends MusicBeatState
 
 	var txtWeekTitle:FlxText;
 	var bgSprite:FlxSprite;
-	var storyMenuGlitch:GlitchShader;
+	var storyMenuGlitchEffect:GlitchEffect;
 
 	private static var curWeek:Int = 0;
 
@@ -287,8 +287,8 @@ class StoryMenuState extends MusicBeatState
 			MusicBeatState.switchState(new MainMenuState());
 		}
 
-		if (storyMenuGlitch != null)
-			storyMenuGlitch.data.uTime.value[0] += elapsed;
+		if (storyMenuGlitchEffect != null)
+			storyMenuGlitchEffect.update(elapsed);
 
 		super.update(elapsed);
 
@@ -455,17 +455,13 @@ class StoryMenuState extends MusicBeatState
 		{
 			bgSprite.visible = false;
 			bgSprite.shader = null;
-			storyMenuGlitch = null;
+			storyMenuGlitchEffect = null;
 		}
 		else if (assetName == "slide")
 		{
 			bgSprite.loadGraphic(Paths.image('purpleskystorymenu'));
-			storyMenuGlitch = new GlitchShader();
-			storyMenuGlitch.data.uTime.value = [0];
-			storyMenuGlitch.data.uSpeed.value = [1.0];
-			storyMenuGlitch.data.uFrequency.value = [4.0];
-			storyMenuGlitch.data.uWaveAmplitude.value = [4.0];
-			bgSprite.shader = storyMenuGlitch;
+			storyMenuGlitchEffect = new GlitchEffect(1.0, 4.0, 4.0);
+			bgSprite.shader = storyMenuGlitchEffect.shader.shader;
 		}
 		else
 		{
