@@ -1,0 +1,11 @@
+{
+	"name": "haxelib",
+	"url" : "https://lib.haxe.org/documentation/",
+	"license": "MIT",
+	"tags": ["haxelib", "core"],
+	"description": "The haxelib client",
+	"classPath": "src",
+	"version": "4.1.1",
+	"releasenote": "Fixed large git installations hanging on non-Windows systems",
+	"contributors": ["HaxeFoundation", "back2dos", "ncannasse", "jason", "Simn", "nadako", "andyli"]
+}

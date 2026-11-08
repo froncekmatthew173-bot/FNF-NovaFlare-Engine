@@ -1,0 +1,6 @@
+brew "opam"
+brew "ninja"
+brew "cmake"
+brew "pkg-config"
+brew "libunistring"
+brew "cpanminus"

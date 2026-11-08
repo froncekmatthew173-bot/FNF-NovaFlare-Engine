@@ -1,0 +1,18 @@
+Maintenance => 维护设置
+
+developerMode => 开发者模式，会禁用一些报错显示和trace
+deepDebug => 记录每首歌曲使用的脚本、图片、音频等资源，并在歌曲结束后输出到运行目录下的debug文件夹
+moreLuaErrors => 启用它将会放出更多Lua的运行时的隐性错误，对于一些疑难杂症真的有很大用处
+devConScale => 控制台的大小，此控制台是用来捕捉所有trace输出的
+
+oldHscriptVersion => 使用 Hscript 为 runhaxecode 工作以兼容旧模组
+
+
+APP => 应用程序
+
+discordRPC => 从 Discord 上的“正在播放”框中显示应用程序
+checkForUpdates => 检查应用程序版本
+screensaver => 处于非活动状态不会进入休眠状态
+filesCheck => 检查游戏是否丢失文件
+filesCheckNew => 检查游戏是否有有问题的文件
+storageFolder => 选择储存游戏数据的文件夹，切换后游戏将自动退出。

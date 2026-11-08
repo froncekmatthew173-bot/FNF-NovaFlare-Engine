@@ -1,0 +1,16 @@
+-D source-header=
+--debug
+-p src
+-cp /tmp/utest-src
+--resource res1.txt@re/s?!%[]))("'1.txt
+--resource res2.bin@re/s?!%[]))("'1.bin
+--resource serializedValues.txt
+--macro Macro.init()
+--dce full
+-D analyzer-optimize
+-D analyzer-user-var-fusion
+-D message.reporting=pretty
+--main unit.TestMain
+-cpp /src/_build/hxcpp-zgc-unit-current
+-D hxcpp_zgc
+-D no-compilation

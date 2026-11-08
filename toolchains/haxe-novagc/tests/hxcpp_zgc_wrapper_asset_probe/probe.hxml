@@ -1,0 +1,5 @@
+-main Main
+-cp toolchains/haxe-novagc/tests/hxcpp_zgc_wrapper_asset_probe
+-D hxcpp_zgc
+-D no-compilation
+-cpp _build/hxcpp-zgc-wrapper-asset-probe

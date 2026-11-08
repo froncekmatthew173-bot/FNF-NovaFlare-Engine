@@ -1,0 +1,9 @@
+-cp toolchains/haxe-novagc/tests/hxcpp_zgc_windows_target_probe
+-cp .haxelib/trandom/1,0,0/src
+-D trandom=1.0.0
+--macro trandom.InitMacro.checkWindows()
+-D windows
+-D hxcpp_zgc
+-D no-compilation
+-main Main
+-cpp _build/hxcpp-zgc-windows-target-probe

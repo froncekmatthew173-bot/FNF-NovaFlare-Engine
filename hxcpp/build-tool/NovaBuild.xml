@@ -1,0 +1,4 @@
+<xml>
+  <!-- Marker consumed by the from-scratch hxcpp ZGC frontend. -->
+  <set name="HXCPP_ZGC_ABI" value="1" />
+</xml>

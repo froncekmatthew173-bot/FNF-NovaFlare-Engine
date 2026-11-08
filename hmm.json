@@ -1,0 +1,298 @@
+{
+  "dependencies": [
+    {
+      "name": "hxp",
+      "type": "git",
+      "dir": null,
+      "ref": "00cba5e40070a229c800c6b1c5f4ee472df651c3",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/hxp-1.3.1"
+    },
+    {
+      "name": "lime",
+      "type": "git",
+      "dir": null,
+      "ref": "e4adfed089eacf9e6eb1bc3ed306eb2e68336256",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/lime-8.3.0"
+    },
+    {
+      "name": "openfl",
+      "type": "git",
+      "dir": null,
+      "ref": "89a29e6ebbd19a4fdc3c37ed41e4fbe8a8208923",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/openfl-9.5.0"
+    },
+    {
+      "name": "flixel",
+      "type": "git",
+      "dir": null,
+      "ref": "4a45067ed2c3a0df53b3c98f066e9ef155fc6f47",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/flixel-5.9.0"
+    },
+    {
+      "name": "luahscript",
+      "type": "git",
+      "dir": null,
+      "ref": "122acb150ba5a55d02b138c2530fa5619fb06c3a",
+      "url": "https://github.com/VapireMox/luahscript"
+    },
+    {
+      "name": "spinehaxe",
+      "type": "git",
+      "dir": null,
+      "ref": "95f951aae49e3f755d64d47a917015eb4186b522",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/spinehaxe-3.5.0"
+    },
+    {
+      "name": "flixel-addons",
+      "type": "git",
+      "dir": null,
+      "ref": "516853354f0fca367e9eba3b21c77b78ed16a0a6",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/flixel-addons-3.3.2"
+    },
+    {
+      "name": "flixel-ui",
+      "type": "git",
+      "dir": null,
+      "ref": "513e0e4f2ee97ad325df577893ec6736985deab5",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/flixel-ui"
+    },
+    {
+      "name": "flixel-tools",
+      "type": "git",
+      "dir": null,
+      "ref": "48bf41100d200dd06e2a6e2db5b9036cd8c9535b",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/flixel-tools-1.5.1"
+    },
+    {
+      "name": "haxeui-core",
+      "type": "git",
+      "dir": null,
+      "ref": "0ce2d82c94e52c87e1bf67127cd10e7928ebbc35",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/haxeui-core-1.7.0"
+    },
+    {
+      "name": "haxeui-flixel",
+      "type": "git",
+      "dir": null,
+      "ref": "7faa822aebc6e88b046ec5e5416554c680f2467c",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/haxeui-flixel"
+    },
+    {
+      "name": "crypto",
+      "type": "git",
+      "dir": null,
+      "ref": "6e96e4aac315a34db4b992a5745d44949c10d273",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/crypto-1.0.4"
+    },
+    {
+      "name": "trandom",
+      "type": "git",
+      "dir": null,
+      "ref": "6f6af350d1f31a9b942490c0183cd7f04699a189",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/trandom-1.0.0"
+    },
+    {
+      "name": "hxWebSockets",
+      "type": "git",
+      "dir": null,
+      "ref": "264e1a630b15c8f28f3407dbded16c8dc20db796",
+      "url": "https://github.com/ianharrigan/hxWebSockets"
+    },
+    {
+      "name": "modcharts",
+      "type": "git",
+      "dir": null,
+      "ref": "64141a84cb490a15db055a90c3885656dde7827b",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/modcharts"
+    },
+    {
+      "name": "hxcpp",
+      "type": "git",
+      "dir": null,
+      "ref": "3f50506ae47aa801fd7e8ef7636ea2dd80b73254",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/hxcpp-4.3.2-new"
+    },
+    {
+      "name": "hxvlc",
+      "type": "git",
+      "dir": null,
+      "ref": "ea94d3b724507bd75aed9de89ad230cb0e92463e",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/hxvlc-2.2.4"
+    },
+    {
+      "name": "hscript-iris-improved",
+      "type": "git",
+      "dir": null,
+      "ref": "11c6e681e8c814579d5546933c584291e6ab1f43",
+      "url": "https://github.com/NovaFlare-Engine-Concentration/hscript-iris-improved"
+    },
+    {
+      "name": "hscript-improved",
+      "type": "git",
+      "dir": null,
+      "ref": "04dd458a8cbcb2892ffb8ddb0c9375581ac5fa2d",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/hscript-improved"
+    },
+    {
+      "name": "markdown",
+      "type": "git",
+      "dir": null,
+      "ref": "0845849468f4fd6dc8f4069fa3013a752dab89ce",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/markdown-1.1.3"
+    },
+    {
+      "name": "flxsoundfilters",
+      "type": "git",
+      "dir": null,
+      "ref": "a89bb537684111a6ff85737981f4b2d8ef4b4f68",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/FlxSoundFilters"
+    },
+    {
+      "name": "hxcpp-debug-server",
+      "type": "git",
+      "dir": null,
+      "ref": "1e0d0c8e66ed63b7535c32bf03dd68bf9722faae",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/hxcpp-debug-server-1.2.4"
+    },
+    {
+      "name": "tjson",
+      "type": "git",
+      "dir": null,
+      "ref": "84356be8240caab93a43c80b6435a9306dc3bfaf",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/tjson-1.4.0"
+    },
+    {
+      "name": "hxdiscord_rpc",
+      "type": "git",
+      "dir": null,
+      "ref": "c25dc5127529fe70684da1a14c6c4853c96f2789",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/hxdiscord_rpc-1.3.0"
+    },
+    {
+      "name": "hxjsonast",
+      "type": "git",
+      "dir": null,
+      "ref": "bd6f03096dff78c805128093e73950b85eb1b77e",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/hxjsonast-1.1.0"
+    },
+    {
+      "name": "json2object",
+      "type": "git",
+      "dir": null,
+      "ref": "82a40a9823c33e0a5c9f598b6da986e43e02831e",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/json2object-3.11.0"
+    },
+    {
+      "name": "linc_luajit",
+      "type": "git",
+      "dir": null,
+      "ref": "1e13da8763acb0d2f9672d78410aa1e5b1407cec",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/linc_luajit"
+    },
+    {
+      "name": "flxanimate",
+      "type": "git",
+      "dir": null,
+      "ref": "b8970d2e4d875c743abe28e356a15413b1774d94",
+      "url": "https://github.com/beihu235/flxanimate"
+    },
+    {
+      "name": "extension-androidtools",
+      "type": "git",
+      "dir": null,
+      "ref": "627f3fc399a0e9d1383eef3a0aa0500301e46108",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/extension-androidtools"
+    },
+    {
+      "name": "funkin.vis",
+      "type": "git",
+      "dir": null,
+      "ref": "83207da570fed93513098908efa3b5a80f31e9b5",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/funkVis-FrequencyFixed"
+    },
+    {
+      "name": "tink_core",
+      "type": "git",
+      "dir": null,
+      "ref": "1bc82e6dd3480e60ad82d7c63829563160ad3493",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/tink_core-1.26.0"
+    },
+    {
+      "name": "grig.audio",
+      "type": "git",
+      "dir": "src",
+      "ref": "fa6f8da0e506d63f40908e7974fa69b23519de3b",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/grig.audio-0.0.5"
+    },
+    {
+      "name": "polymod",
+      "type": "git",
+      "dir": null,
+      "ref": "e6147f3fb0aa0de86d0db6890b1ccf968a504612",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/polymod-1.8.0.git"
+    },
+    {
+      "name": "FlxPartialSound",
+      "type": "git",
+      "dir": null,
+      "ref": "2f984e244f1544ca98c0e03b9b21ae570f07ac55",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/FlxPartialSound"
+    },
+    {
+      "name": "format",
+      "type": "git",
+      "dir": null,
+      "ref": "1d4ebc1fddb654263b15ff753d291f137281db9a",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/format-3.5.0"
+    },
+    {
+      "name": "jsonpatch",
+      "type": "git",
+      "dir": null,
+      "ref": "930a5d81245f53ffa578dd1f20d8f212a8fe38b5",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/jsonpatch-1.1.0"
+    },
+    {
+      "name": "jsonpath",
+      "type": "git",
+      "dir": null,
+      "ref": "21a872ce30ea8eb064f5eb26cfea82fce0c83b8d",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/jsonpath-1.1.0"
+    },
+    {
+      "name": "thx.core",
+      "type": "git",
+      "dir": null,
+      "ref": "2bf2b992e06159510f595554e6b952e47922f128",
+      "url": "https://github.com/fponticelli/thx.core"
+    },
+    {
+      "name": "thx.semver",
+      "type": "git",
+      "dir": null,
+      "ref": "bdb191fe7cf745c02a980749906dbf22719e200b",
+      "url": "https://github.com/fponticelli/thx.semver"
+    },
+    {
+      "name": "foxlite",
+      "type": "git",
+      "dir": null,
+      "ref": "f87ec207a774deffb01d613a03dee68d9473bbc3",
+      "url": "https://github.com/dwdvIl/foxlite"
+    },
+    {
+      "name": "away3d",
+      "type": "git",
+      "dir": null,
+      "ref": "3d2442aaa041e1ddb589e91ddb8553fdbf605bbd",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/away3d-5.0.9"
+    },
+    {
+      "name": "flixel-animate",
+      "type": "git",
+      "dir": null,
+      "ref": "01c63babf2954addb8c2caacb5900b6cc7f4276f",
+      "url": "https://github.com/NovaFlare-Engine-haxelib/flixel-animate-1.5.0"
+    }
+  ]
+}

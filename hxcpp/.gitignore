@@ -1,0 +1,21 @@
+# Generated native build products
+*.a
+*.dll
+*.dmp
+*.etl
+*.exe
+*.gch
+*.gch.*
+*.ilk
+*.lib
+*.log
+*.ndll
+*.o
+*.obj
+*.pdb
+*.tmp
+
+# Local build and backup files
+/build/
+/cmake-build-*/
+/run.n.stale*

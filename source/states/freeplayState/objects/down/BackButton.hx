@@ -1,0 +1,85 @@
+package states.freeplayState.objects.down;
+
+import flixel.input.keyboard.FlxKey;
+
+import states.mainMenuState.MainMenuState;
+
+class BackButton extends FlxSpriteGroup {
+    var pressRect:Rect;
+    var disRect:SkewRoundRect;
+
+    var text:FlxText;
+
+    var event:Dynamic -> Void = null;
+    var normalColor:FlxColor;
+    var hoverColor:FlxColor;
+
+    public function new(x:Float, y:Float, width:Float, height:Float, onClick:Dynamic -> Void = null) {
+        super(x, y);
+
+        pressRect = new Rect(0, 0, width, height, height / 4, height / 4);
+        add(pressRect);
+        pressRect.alpha = 0;
+
+        disRect = new SkewRoundRect(10, 0, width - 10, height - 10, height / 4, height / 4, -10, 0);
+        normalColor = EngineSet.mainColor;
+        hoverColor = CoolUtil.brightenColor(normalColor, 1.2);
+        disRect.color = normalColor;
+        add(disRect);
+
+        text = new FlxText(0, 0, 0, 'Back');
+        text.setFormat(Paths.font(Language.get('fontName', 'main') + '.ttf'), 24, 0xFFFFFFFF, CENTER, FlxTextBorderStyle.OUTLINE, 0xFFFFFFFF);
+        text.borderStyle = NONE;
+		text.antialiasing = ClientPrefs.data.antialiasing;
+        add(text);
+        text.x += 10 + (disRect.width - text.width) / 2;
+        text.y += (disRect.height - text.height) / 2;
+
+        this.event = onClick;
+    }
+
+    override function update(elapsed:Float)
+	{
+        var mouse = FreeplayState.instance.mouseEvent;
+
+        var overlaps = mouse.overlaps(this.pressRect);
+        disRect.color = overlaps ? hoverColor : normalColor;
+
+        if (overlaps) {
+            if (mouse.justReleased) {
+                back2Mainmenu();                 
+            }
+        }
+
+        
+        if (Controls.instance.justPressed('back')) {
+            if (FreeplayState.instance.searchJustUnfocused) {
+                FreeplayState.instance.searchJustUnfocused = false;
+                FlxG.sound.play(Paths.sound('cancelMenu'));
+            } else if (FreeplayState.instance.searchButton.hasFocus) {
+                if (FlxG.keys.anyJustPressed([ESCAPE])) {
+                    FreeplayState.instance.searchButton.unfocusSearch();
+                    FlxG.sound.play(Paths.sound('cancelMenu'));
+                }
+            } else if (FreeplayState.instance.keyboardState == 0) {
+                back2Mainmenu();
+            } else {
+                FreeplayState.instance.keyboardState = 0;
+                FreeplayState.instance.curFunc = -1;
+                FlxG.sound.play(Paths.sound('cancelMenu'));
+            }
+        }
+
+        super.update(elapsed);
+    }
+
+    function back2Mainmenu() {
+        FreeplayState.instance.stopAll = true;
+        Mods.loadTopMod();
+        BackendThread.run(() -> {
+            FreeplayState.destroyFreeplayVocals();
+            FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
+        });
+        MusicBeatState.switchState(new MainMenuState());
+    }
+}

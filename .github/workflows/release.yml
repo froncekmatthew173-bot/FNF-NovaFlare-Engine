@@ -1,0 +1,305 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_input:
+        description: '输入格式为"版本名 版本号"，例如：1.2.0-Dev 2.7'
+        required: true
+        default: ''
+      replace_existing_release:
+        description: '替换同版本的 Release 和附件，保留原有标题、说明及发布状态'
+        required: false
+        type: boolean
+        default: false
+      original_release_metadata:
+        description: '重建已删除的 Release 时，传入此前备份的元数据 JSON'
+        required: false
+        type: string
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  update-versions:
+    runs-on: ubuntu-latest
+    outputs:
+      version_name: ${{ steps.parse-version.outputs.version_name }}
+      version_number: ${{ steps.parse-version.outputs.version_number }}
+      version_number_int_with_timestamp: ${{ steps.parse-version.outputs.version_number_int_with_timestamp }}
+      commit_sha: ${{ steps.commit-version.outputs.sha }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Parse version input
+        id: parse-version
+        run: |
+          input="${{ github.event.inputs.version_input }}"
+          version_name=$(echo "$input" | awk '{print $1}')
+          version_number=$(echo "$input" | awk '{print $2}')
+          commit_sha=$(git rev-parse --short HEAD)
+          current_timestamp=$(date +%Y%m%d%H%M)
+          
+          version_number_int=$(echo "$version_number" | tr -d '.')
+          current_date=$(date +%y%m%d)
+          version_number_int_with_timestamp="${version_number_int}${current_date}"
+
+          echo "Parsed version name: $version_name"
+          echo "Parsed version number: $version_number"
+          echo "Version number without dots: $version_number_int"
+          echo "Version number with timestamp: $version_number_int_with_timestamp"
+          echo "Commit SHA: $commit_sha"
+          
+          echo "version_name=$version_name" >> $GITHUB_OUTPUT
+          echo "version_number=$version_number" >> $GITHUB_OUTPUT
+          echo "version_number_int_with_timestamp=$version_number_int_with_timestamp" >> $GITHUB_OUTPUT
+          echo "commit_sha=$commit_sha" >> $GITHUB_OUTPUT
+
+      - name: Update gitVersion.txt
+        run: |
+          echo "Updating gitVersion.txt..."
+          echo "${{ steps.parse-version.outputs.version_name }}" > gitVersion.txt
+          echo "${{ steps.parse-version.outputs.version_number }}" >> gitVersion.txt
+          echo "Updated gitVersion.txt content:"
+          cat gitVersion.txt
+
+      - name: Update Project.xml
+        run: |
+          echo "Updating Project.xml..."
+          if grep -q 'build-number="[0-9]*"' Project.xml; then
+            sed -i "s/\(<app title=\"NovaFlare Engine\".* build-number=\"\)[0-9]*\(\"\)/\1${{ steps.parse-version.outputs.version_number_int_with_timestamp }}\2/" Project.xml
+            echo "Updated existing build-number attribute with integer version and timestamp"
+          else
+            sed -i "s/\(<app title=\"NovaFlare Engine\".* version=\"[^\"]*\"\)/\1 build-number=\"${{ steps.parse-version.outputs.version_number_int_with_timestamp }}\"/" Project.xml
+            echo "Added build-number attribute with integer version and timestamp"
+          fi
+          echo "Updated Project.xml version and build-number attributes"
+
+      - name: Update MainMenuState.hx
+        run: |
+          echo "Updating MainMenuState.hx..."
+          sed -i "s/\(public static var novaFlareEngineVersion:String = '\)[^']*/\1${{ steps.parse-version.outputs.version_name }}/" source/states/mainMenuState/MainMenuState.hx
+          sed -i "s/\(public static var novaFlareEngineDataVersion:Float = \)[0-9.]*/\1${{ steps.parse-version.outputs.version_number }}/" source/states/mainMenuState/MainMenuState.hx
+          echo "Updated MainMenuState.hx version variables"
+
+      - name: Commit all changes
+        id: commit-version
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add gitVersion.txt Project.xml source/states/mainMenuState/MainMenuState.hx
+    
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: Release version ${{ steps.parse-version.outputs.version_name }} ${{ steps.parse-version.outputs.version_number_int_with_timestamp }}"
+            git push
+          fi
+          echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+          
+  mobile-build:
+    name: "Mobile Build (macOS 14)"
+    needs: update-versions
+    uses: ./.github/workflows/MobileBuild.yml
+    with:
+      dependencies_to_update: 'all'
+    secrets: inherit
+
+  macos-build:
+    name: "macOS Build"
+    needs: mobile-build
+    uses: ./.github/workflows/MacBuild.yml
+    secrets: inherit
+
+  windows-build:
+    name: "Windows Build"
+    needs: update-versions
+    uses: ./.github/workflows/WindowsBuild.yml
+    secrets: inherit
+
+  linux-build:
+    name: "Linux Build"
+    needs: update-versions
+    uses: ./.github/workflows/LinuxBuild.yml
+    secrets: inherit
+
+  releaser:
+    name: "Create Release"
+    needs: [update-versions, mobile-build, macos-build, windows-build, linux-build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download Android Build
+        uses: actions/download-artifact@v4
+        with:
+          name: androidBuild
+          path: artifacts/
+
+      - name: Download iOS Build
+        uses: actions/download-artifact@v4
+        with:
+          name: iOSBuild
+          path: artifacts/
+
+      - name: Download macOS14 Build
+        uses: actions/download-artifact@v4
+        with:
+          name: macOSBuild-14
+          path: artifacts/
+
+      - name: Download macOS15 Build
+        uses: actions/download-artifact@v4
+        with:
+          name: macOSBuild-15
+          path: artifacts/
+
+      - name: Download Windows Build
+        uses: actions/download-artifact@v4
+        with:
+          name: windowsBuild
+          path: artifacts/
+
+      - name: Download Linux Build
+        uses: actions/download-artifact@v4
+        with:
+          name: LinuxBuild
+          path: artifacts/
+
+      - name: List downloaded artifacts
+        run: |
+          find artifacts/ -type f -name "*" | sort
+          echo "Total files found:"
+          find artifacts/ -type f -name "*" | wc -l
+
+      - name: Prepare release metadata
+        id: release-metadata
+        uses: actions/github-script@v9
+        env:
+          RELEASE_TAG: "V${{ needs.update-versions.outputs.version_name }}"
+          REPLACE_EXISTING: "${{ inputs.replace_existing_release }}"
+          ORIGINAL_RELEASE_METADATA: ${{ inputs.original_release_metadata }}
+        with:
+          script: |
+            const fs = require('fs');
+            const tag = process.env.RELEASE_TAG;
+            const replace = process.env.REPLACE_EXISTING === 'true';
+            core.setOutput('name', tag);
+            core.setOutput('draft', 'false');
+            core.setOutput('prerelease', 'false');
+            if (!replace) return;
+
+            const expected = ['android.zip', 'ios.zip', 'linux.zip', 'macOS-14.zip', 'macOS-15.zip', 'windows.zip'];
+            for (const name of expected) {
+              if (!fs.existsSync(`artifacts/${name}`) || fs.statSync(`artifacts/${name}`).size === 0) {
+                throw new Error(`Missing or empty replacement asset: ${name}`);
+              }
+            }
+            let release;
+            let isLatest = false;
+            if (process.env.ORIGINAL_RELEASE_METADATA) {
+              const backup = JSON.parse(process.env.ORIGINAL_RELEASE_METADATA);
+              release = backup.release;
+              isLatest = backup.isLatest === true;
+            } else {
+              ({data: release} = await github.rest.repos.getReleaseByTag({...context.repo, tag}));
+              try {
+                const {data: latest} = await github.rest.repos.getLatestRelease(context.repo);
+                isLatest = latest.id === release.id;
+              } catch (error) {
+                if (error.status !== 404) throw error;
+              }
+            }
+            if (release?.tag_name !== tag || typeof release.draft !== 'boolean' || typeof release.prerelease !== 'boolean') {
+              throw new Error('Original release metadata does not match the requested tag');
+            }
+            if (release.immutable) throw new Error('Cannot replace an immutable release');
+            for (const asset of release.assets) {
+              if (!expected.includes(asset.name)) throw new Error(`No replacement for existing asset: ${asset.name}`);
+            }
+            fs.writeFileSync('release-original.json', JSON.stringify({release, isLatest}, null, 2));
+            core.setOutput('name', release.name ?? tag);
+            core.setOutput('body', release.body ?? '');
+            core.setOutput('draft', String(release.draft));
+            core.setOutput('prerelease', String(release.prerelease));
+
+      - name: Back up original release metadata
+        if: inputs.replace_existing_release
+        uses: actions/upload-artifact@v4
+        with:
+          name: original-release-metadata
+          path: release-original.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Recreate replacement release as a draft
+        if: inputs.replace_existing_release
+        uses: actions/github-script@v9
+        env:
+          BUILD_SHA: ${{ needs.update-versions.outputs.commit_sha }}
+        with:
+          script: |
+            const fs = require('fs');
+            const {release} = JSON.parse(fs.readFileSync('release-original.json', 'utf8'));
+            try {
+              await github.rest.repos.deleteRelease({...context.repo, release_id: release.id});
+            } catch (error) {
+              if (error.status !== 404) throw error;
+            }
+            let tagExists = true;
+            try {
+              await github.rest.git.getRef({...context.repo, ref: `tags/${release.tag_name}`});
+            } catch (error) {
+              if (error.status !== 404) throw error;
+              tagExists = false;
+            }
+            if (tagExists) await github.rest.git.deleteRef({...context.repo, ref: `tags/${release.tag_name}`});
+            await github.rest.git.createRef({
+              ...context.repo, ref: `refs/tags/${release.tag_name}`, sha: process.env.BUILD_SHA
+            });
+            const {data: replacement} = await github.rest.repos.createRelease({
+              ...context.repo, tag_name: release.tag_name, target_commitish: process.env.BUILD_SHA,
+              name: release.name, body: release.body, draft: true, prerelease: release.prerelease,
+              generate_release_notes: false, make_latest: 'false'
+            });
+            fs.writeFileSync('release-replacement.json', JSON.stringify({id: replacement.id}));
+
+      - name: Publish The Release
+        uses: softprops/action-gh-release@v3
+        with:
+          token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: ${{ steps.release-metadata.outputs.prerelease == 'true' }}
+          draft: ${{ inputs.replace_existing_release || steps.release-metadata.outputs.draft == 'true' }}
+          tag_name: "V${{ needs.update-versions.outputs.version_name }}"
+          target_commitish: ${{ needs.update-versions.outputs.commit_sha }}
+          name: ${{ steps.release-metadata.outputs.name }}
+          body: ${{ steps.release-metadata.outputs.body }}
+          files: |
+            artifacts/*.zip
+          fail_on_unmatched_files: true
+
+      - name: Restore replacement release publication state
+        if: inputs.replace_existing_release
+        uses: actions/github-script@v9
+        env:
+          BUILD_SHA: ${{ needs.update-versions.outputs.commit_sha }}
+        with:
+          script: |
+            const fs = require('fs');
+            const {release, isLatest} = JSON.parse(fs.readFileSync('release-original.json', 'utf8'));
+            const {id} = JSON.parse(fs.readFileSync('release-replacement.json', 'utf8'));
+            const {data: replacement} = await github.rest.repos.getRelease({...context.repo, release_id: id});
+            const expected = ['android.zip', 'ios.zip', 'linux.zip', 'macOS-14.zip', 'macOS-15.zip', 'windows.zip'];
+            if (expected.some(name => !replacement.assets.some(asset => asset.name === name && asset.size > 0 && asset.state === 'uploaded'))) {
+              throw new Error('Replacement assets are incomplete; leaving the release as a draft');
+            }
+            const {data: tagRef} = await github.rest.git.getRef({...context.repo, ref: `tags/${release.tag_name}`});
+            if (tagRef.object.sha !== process.env.BUILD_SHA) {
+              throw new Error('Release tag does not point to the build commit; leaving the release as a draft');
+            }
+            await github.rest.repos.updateRelease({
+              ...context.repo, release_id: id, name: release.name, body: release.body,
+              draft: release.draft, prerelease: release.prerelease, make_latest: isLatest ? 'true' : 'false'
+            });

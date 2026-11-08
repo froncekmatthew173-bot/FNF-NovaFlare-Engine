@@ -1,0 +1,5 @@
+-cp .
+-main Main
+-cpp generated
+-D novagc-precise
+-D no-compilation

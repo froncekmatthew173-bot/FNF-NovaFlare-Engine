@@ -1,0 +1,88 @@
+name: oldbuildtest
+
+# Controls when the action will run.
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  buildAndroid:
+    name: buildAndroid
+    runs-on: ubuntu-latest
+    environment: ${{ github.repository == 'NovaFlare-Engine-Concentration/FNF-NovaFlare-Engine' && 'private-build' || 'public-build' }}
+    env:
+      NOVA_GA_GAME_KEY: ${{ github.repository == 'NovaFlare-Engine-Concentration/FNF-NovaFlare-Engine' && github.event_name != 'pull_request' && github.event_name != 'pull_request_target' && secrets.NOVA_GA_GAME_KEY || '' }}
+      NOVA_GA_SECRET_KEY: ${{ github.repository == 'NovaFlare-Engine-Concentration/FNF-NovaFlare-Engine' && github.event_name != 'pull_request' && github.event_name != 'pull_request_target' && secrets.NOVA_GA_SECRET_KEY || '' }}
+      NOVA_GA_REQUIRED: ${{ github.repository == 'NovaFlare-Engine-Concentration/FNF-NovaFlare-Engine' && github.event_name != 'pull_request' && github.event_name != 'pull_request_target' && '1' || '' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+
+      - name: Setup Android NDK
+        uses: nttld/setup-ndk@main
+        id: setup-ndk
+        with:
+          ndk-version: r21e
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@main
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Haxe
+        uses: krdlab/setup-haxe@master
+        with:
+          haxe-version: 4.3.7
+
+      - name: Check GameAnalytics credentials
+        if: github.repository == 'NovaFlare-Engine-Concentration/FNF-NovaFlare-Engine' && github.event_name != 'pull_request' && github.event_name != 'pull_request_target'
+        shell: pwsh
+        run: ./tools/check-gameanalytics-env.ps1 -Required
+      
+      - name: Restore Previous Cache
+        id: cache-debug-build-android-restore
+        uses: actions/cache/restore@main
+        with:
+          path: |
+            ~/haxelib
+            ~/.gradle
+            export/release/android/haxe
+            export/release/android/obj
+          key: cache-build-Android
+
+      - name: Install Libraries
+        run: |
+          haxelib setup ~/haxelib
+          haxelib git hmm https://github.com/NovaFlare-Engine-haxelib/hmm-3.1.0 70aca779a9d374a6e6b83c18715a3991a147ca37 --skip-dependencies
+          haxelib run hmm install
+
+      - name: Create Version Tag
+        run: echo "${{github.run_id}}" > VERSION
+
+      - name: Configure Android
+        run: |
+          haxelib run lime setup -alias -y
+          haxelib run lime config ANDROID_SDK $ANDROID_HOME
+          haxelib run lime config ANDROID_NDK_ROOT $ANDROID_NDK_HOME
+          haxelib run lime config JAVA_HOME $JAVA_HOME
+          haxelib run lime config ANDROID_SETUP true
+          haxelib list
+        env:
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+
+      - name: Building
+        run: haxelib run lime build android -Dcommit_sha=$(git rev-parse --short HEAD)
+        env:
+          cert_pass: nullfunni
+          cert_alias_pass: nullfunni
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@main
+        with:
+          name: androidBuild
+          path: export/release/android/bin/app/build/outputs/apk/release/*.apk
+        

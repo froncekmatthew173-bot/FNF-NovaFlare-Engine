@@ -1,0 +1,8 @@
+[submodule "hxcpp-novagc"]
+	path = hxcpp
+	url = https://github.com/NovaFlare-Engine-haxelib/hxcpp-novagc.git
+	branch = main
+[submodule "haxe-novagc"]
+	path = toolchains/haxe-novagc
+	url = https://github.com/NovaFlare-Engine-haxelib/haxe-novagc.git
+	branch = novagc-precise

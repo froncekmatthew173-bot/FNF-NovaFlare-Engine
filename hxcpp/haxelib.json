@@ -1,0 +1,10 @@
+{
+  "name": "hxcpp",
+  "url": "https://github.com/NovaFlare-Engine-haxelib/hxcpp-novagc",
+  "license": "MIT",
+  "tags": ["cpp", "runtime", "precise-gc", "low-latency"],
+  "description": "Nova single-heap precise low-latency Haxe C++ runtime",
+  "version": "0.1.0",
+  "releasenote": "Initial from-scratch runtime ABI and collector kernel.",
+  "classPath": "src"
+}

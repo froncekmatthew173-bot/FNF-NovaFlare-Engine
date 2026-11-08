@@ -1,0 +1,6 @@
+-cp .
+-main Benchmark
+-cpp generated
+-D novagc-precise
+-D no-compilation
+--dce full
